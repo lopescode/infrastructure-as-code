@@ -30,7 +30,7 @@ jobs:
       - name: Run Terraform
         run: |
           cd terraform
-          cd s3-static-website
+          cd s3-aws-bucket-static
           terraform init
           terraform apply -auto-approve -var="bucket_name=${{ env.BUCKET_NAME }}"
 
