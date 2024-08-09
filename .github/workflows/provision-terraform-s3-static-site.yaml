@@ -1,24 +1,25 @@
-name: Create S3 Static site using Terraform
+name: Deploy S3 Static Site
 
 on:
   issues:
-    type:
+    types:
       - opened
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: startsWith(github.event.issue.title, 'front')
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Setup AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: us-east-1 # substitua pela região desejada
 
       - name: Extract Bucket Name from Issue
         run: |
@@ -29,9 +30,9 @@ jobs:
       - name: Run Terraform
         run: |
           cd terraform
-          cd s3-aws-bucket-static
+          cd s3-static-website
           terraform init
-          terraform apply -auto-approve -var="bucket-name=${{ env.BUCKET_NAME }}"
+          terraform apply -auto-approve -var="bucket_name=${{ env.BUCKET_NAME }}"
 
       - name: Add comment
         run: gh issue comment "$NUMBER" --repo "$REPO" --body "$BODY"
@@ -39,4 +40,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
-          BODY: "S3 Bucket created successfully!"
+          BODY: >
+            O bucket S3 foi criado com sucesso! 🎉
