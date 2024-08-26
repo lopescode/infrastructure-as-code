@@ -28,7 +28,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t my-app:${{ env.BRANCH_NAME }} ./website-sample
+          docker build -t my-app:${{ env.BRANCH_NAME }} .
 
       - name: Push Docker Image
         run: |
