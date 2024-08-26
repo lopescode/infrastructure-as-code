@@ -1,16 +1,17 @@
 # Infrastructure as Code (IaC) Study Repository
 
-Welcome to the Infrastructure as Code (IaC) study repository. This project aims to provide practical examples and tutorials on using various IaC tools such as Terraform and CloudFormation.
+Welcome to the Infrastructure as Code (IaC) study repository. This project aims to provide practical examples and tutorials on using various IaC tools such as Terraform and Cloudformation.
 
 ## Table of Contents
 
 - [About](#about)
 - [Main benefits](#main-benefits)
 - [Prerequisites](#prerequisites)
-- [Project Structure](#project-structure)
 - [How to Use](#how-to-use)
   - [Terraform](terraform/README.md)
-  - [Cloud Formation](cloudformation/README.md)
+  - ~~Cloudformation~~
+- [Testing](#testing)
+  - [Testing a Site with Docker](documentation/TESTING_DOCKER.md)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -30,38 +31,18 @@ To reproduce the examples in this repository, you will need the following softwa
 
 - [Terraform](https://www.terraform.io/downloads.html)
 - [AWS CLI](https://aws.amazon.com/cli/)
-- [AWS CloudFormation](https://aws.amazon.com/cloudformation/)
 
 Additionally, you will need an AWS account and to configure your credentials locally.
-
-## Project Structure
-
-The repository structure is as follows:
-
-```plaintext
-.
-├── terraform
-│   ├── ec2-aws
-│   ├── s3-aws-bucket-static
-│   ├── vpc
-│   └── README.md
-├── cloudformation
-│   ├── ec2-aws
-│   ├── s3-aws-bucket-static
-│   ├── vpc
-│   └── README.md
-└── README.md
-```
-
-- **terraform/**: Contains examples of using Terraform.
-- **cloudformation/**: Contains examples of using AWS CloudFormation.
 
 ## How to use
 
 See the README of each project to understand how it works.
 
 - [Terraform](terraform/README.md)
-- [Cloud Formation](cloudformation/README.md)
+
+## Testing
+
+To test your site locally with Docker, follow the instructions in the [Testing a Site with Docker](documentation/TESTING_DOCKER.md) document.
 
 ## Contributing
 

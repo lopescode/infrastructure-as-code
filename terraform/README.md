@@ -4,9 +4,8 @@ This directory contains examples of how to use Terraform to manage infrastructur
 
 ## Examples
 
-- [EC2 AWS](ec2-aws/README.md)
+- [ECS AWS](ecs-aws/README.md)
 - [S3 AWS Bucket Static](s3-aws-bucket-static/README.md)
-- [VPC AWS](vpc-aws/README.md)
 
 ## Prerequisites
 

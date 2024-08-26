@@ -1,6 +1,6 @@
 ### EC2 AWS
 
-Description: This example demonstrates how to set up an EC2 instance using Terraform.
+Description: This example demonstrates how to set up an ECS instance using Terraform.
 
 #### Files
 
@@ -13,7 +13,7 @@ Description: This example demonstrates how to set up an EC2 instance using Terra
 1. Navigate to the example directory:
 
    ```bash
-   cd terraform/ec2-aws
+   cd terraform/ecs-aws
    ```
 
 2. Initialize Terraform:

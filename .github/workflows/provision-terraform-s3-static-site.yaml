@@ -19,7 +19,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 # substitua pela região desejada
+          aws-region: us-east-1
 
       - name: Extract Bucket Name from Issue
         run: |
@@ -29,8 +29,7 @@ jobs:
 
       - name: Run Terraform
         run: |
-          cd terraform
-          cd s3-aws-bucket-static
+          cd terraform/s3-aws-bucket-static
           terraform init
           terraform apply -auto-approve -var="bucket_name=${{ env.BUCKET_NAME }}"
 

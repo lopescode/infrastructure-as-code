@@ -1,0 +1,48 @@
+name: Deploy ECS Service for Epic Branch
+
+on:
+  push:
+    branches:
+      - "epic-*"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Extract Branch Name
+        run: |
+          BRANCH_NAME=$(echo "${GITHUB_REF##*/}")
+          echo "Branch Name: $BRANCH_NAME"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Build Docker Image
+        run: |
+          docker build -t my-app:${{ env.BRANCH_NAME }} ./website-sample
+
+      - name: Push Docker Image
+        run: |
+          docker tag my-app:${{ env.BRANCH_NAME }} <YOUR_DOCKER_REGISTRY>/my-app:${{ env.BRANCH_NAME }}
+          docker push <YOUR_DOCKER_REGISTRY>/my-app:${{ env.BRANCH_NAME }}
+
+      - name: Run Terraform
+        run: |
+          cd terraform/ecs-aws
+          terraform init
+          terraform apply -auto-approve -var="branch_name=${{ env.BRANCH_NAME }}" -var="docker_image=<YOUR_DOCKER_REGISTRY>/my-app:${{ env.BRANCH_NAME }}"
+
+      - name: Comment on Pull Request
+        if: github.event_name == 'pull_request'
+        run: gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --body "ECS service has been successfully created/updated for branch ${{ env.BRANCH_NAME }}."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
