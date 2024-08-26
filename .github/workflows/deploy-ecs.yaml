@@ -22,7 +22,7 @@ jobs:
 
       - name: Extract Branch Name
         run: |
-          BRANCH_NAME=$(echo "${GITHUB_REF##*/}")
+          export BRANCH_NAME=$(echo "${GITHUB_REF##*/}")
           echo "Branch Name: $BRANCH_NAME"
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
@@ -30,16 +30,23 @@ jobs:
         run: |
           docker build -t my-app:${{ env.BRANCH_NAME }} ./website-sample
 
+      - name: Login to Docker Registry
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Tag Docker Image
+        run: |
+          docker tag my-app:${{ env.BRANCH_NAME }} ${{ secrets.DOCKER_REGISTRY }}/my-app:${{ env.BRANCH_NAME }}
+
       - name: Push Docker Image
         run: |
-          docker tag my-app:${{ env.BRANCH_NAME }} <YOUR_DOCKER_REGISTRY>/my-app:${{ env.BRANCH_NAME }}
-          docker push <YOUR_DOCKER_REGISTRY>/my-app:${{ env.BRANCH_NAME }}
+          docker push ${{ secrets.DOCKER_REGISTRY }}/my-app:${{ env.BRANCH_NAME }}
 
       - name: Run Terraform
         run: |
           cd terraform/ecs-aws
           terraform init
-          terraform apply -auto-approve -var="branch_name=${{ env.BRANCH_NAME }}" -var="docker_image=<YOUR_DOCKER_REGISTRY>/my-app:${{ env.BRANCH_NAME }}"
+          terraform apply -auto-approve -var="branch_name=${{ env.BRANCH_NAME }}" -var="docker_image=${{ secrets.DOCKER_REGISTRY }}/my-app:${{ env.BRANCH_NAME }}"
 
       - name: Comment on Pull Request
         if: github.event_name == 'pull_request'
